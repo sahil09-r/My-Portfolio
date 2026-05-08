@@ -723,14 +723,6 @@ const ProjectCard = ({ project }: { project: Project }) => {
   return (
     <motion.div 
       layout
-      onClick={(e) => {
-        // Prevent expansion if clicking a button, link, or the footer area
-        const target = e.target as HTMLElement;
-        if (target.closest('a') || target.closest('button') || target.closest('.project-footer')) {
-          return;
-        }
-        setIsExpanded(!isExpanded);
-      }}
       whileHover={{ 
         translateZ: 50, 
         rotateX: 2, 
@@ -738,103 +730,101 @@ const ProjectCard = ({ project }: { project: Project }) => {
         scale: 1.02
       }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="bg-surface-container shadow-[0_0_40px_rgba(255,180,168,0.05)] border-l-4 border-primary relative flex flex-col group transition-all duration-500 hover:shadow-[0_0_60px_rgba(255,180,168,0.15)] h-full preserve-3d cursor-pointer"
+      className="bg-surface-container shadow-[0_0_40px_rgba(255,180,168,0.05)] border-l-4 border-primary relative flex flex-col group transition-all duration-500 hover:shadow-[0_0_60px_rgba(255,180,168,0.15)] h-full preserve-3d"
     >
-      <div className="bg-surface-container-high h-10 border-b border-outline-variant/30 flex items-center justify-between px-4">
-        <div className="flex space-x-2">
-          <div className="w-2 h-2 bg-error"></div>
-          <div className="w-2 h-2 bg-primary"></div>
-          <div className="w-2 h-2 bg-surface-container-highest"></div>
+      <div 
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="cursor-pointer flex-1 flex flex-col"
+      >
+        <div className="bg-surface-container-high h-10 border-b border-outline-variant/30 flex items-center justify-between px-4">
+          <div className="flex space-x-2">
+            <div className="w-2 h-2 bg-error"></div>
+            <div className="w-2 h-2 bg-primary"></div>
+            <div className="w-2 h-2 bg-surface-container-highest"></div>
+          </div>
+          <div className="text-[10px] font-mono text-primary/60 tracking-[0.2em]">NODE_{project.id}: {isExpanded ? 'EXPANDED' : 'ACTIVE'}</div>
         </div>
-        <div className="text-[10px] font-mono text-primary/60 tracking-[0.2em]">NODE_{project.id}: {isExpanded ? 'EXPANDED' : 'ACTIVE'}</div>
+        <div className="p-8 flex flex-col flex-1">
+          <div className="flex justify-between items-start mb-6">
+            <h2 className="text-2xl font-black text-on-surface uppercase tracking-tight">
+              <span className="text-primary">&gt;</span>PROJECT_{project.id}:<br/>{project.title}
+            </h2>
+            <span className="text-[10px] font-mono border border-primary px-2 py-1 text-primary">STABLE_BUILD</span>
+          </div>
+          
+          <motion.div layout className="relative h-48 bg-surface-container-lowest border border-outline/10 mb-6 overflow-hidden">
+            <img 
+              className="w-full h-full object-cover opacity-50 grayscale hover:grayscale-0 transition-all duration-700" 
+              src={project.image}
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest to-transparent opacity-80"></div>
+            <div className="absolute bottom-4 left-4 font-mono text-[10px] text-primary space-y-1">
+              {project.metrics.map((m, i) => <p key={i}>{m}</p>)}
+            </div>
+          </motion.div>
+
+          <motion.p layout className="text-on-surface-variant font-mono text-sm leading-relaxed mb-6">{project.description}</motion.p>
+          
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden mb-6"
+              >
+                <div className="border-t border-primary/10 pt-4 space-y-2">
+                  <div className="text-[10px] font-mono text-primary/40 uppercase mb-2 tracking-widest">System_Specifications:</div>
+                  {project.details.map((detail, i) => (
+                    <div key={i} className="flex items-start gap-2 text-xs font-mono text-on-surface-variant/80">
+                      <span className="text-primary mt-1">↳</span>
+                      <span>{detail}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
-      <div className="flex-1 p-8 flex flex-col">
-        <div className="flex justify-between items-start mb-6">
-          <h2 className="text-2xl font-black text-on-surface uppercase tracking-tight">
-            <span className="text-primary">&gt;</span>PROJECT_{project.id}:<br/>{project.title}
-          </h2>
-          <span className="text-[10px] font-mono border border-primary px-2 py-1 text-primary">STABLE_BUILD</span>
+
+      <div 
+        className="project-footer flex items-center justify-between p-8 pt-0 mt-auto"
+      >
+        <div className="flex gap-2 flex-wrap">
+          {project.tags.map(tag => (
+            <span key={tag} className="bg-surface-container-highest px-3 py-1 text-[10px] font-mono text-primary">[{tag}]</span>
+          ))}
         </div>
-        
-        <motion.div layout className="relative h-48 bg-surface-container-lowest border border-outline/10 mb-6 overflow-hidden">
-          <img 
-            className="w-full h-full object-cover opacity-50 grayscale hover:grayscale-0 transition-all duration-700" 
-            src={project.image}
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest to-transparent opacity-80"></div>
-          <div className="absolute bottom-4 left-4 font-mono text-[10px] text-primary space-y-1">
-            {project.metrics.map((m, i) => <p key={i}>{m}</p>)}
-          </div>
-        </motion.div>
-
-        <motion.p layout className="text-on-surface-variant font-mono text-sm leading-relaxed mb-6">{project.description}</motion.p>
-        
-        <AnimatePresence>
-          {(isExpanded || true) && (
-            <motion.div
-              initial={false}
-              animate={{ 
-                height: isExpanded ? 'auto' : 0,
-                opacity: isExpanded ? 1 : 0,
-                marginBottom: isExpanded ? 24 : 0
-              }}
-              className="overflow-hidden"
+        <div className="flex gap-4">
+          {project.liveUrl && (
+            <a 
+              href={project.liveUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="relative z-30 bg-primary text-on-primary font-black px-6 py-2 text-xs tracking-[0.2em] hover:bg-white hover:text-surface transition-all active:translate-y-1 flex items-center gap-2 group/btn shadow-[0_0_10px_rgba(255,180,168,0.2)]"
             >
-              <div className="border-t border-primary/10 pt-4 space-y-2">
-                <div className="text-[10px] font-mono text-primary/40 uppercase mb-2 tracking-widest">System_Specifications:</div>
-                {project.details.map((detail, i) => (
-                  <div key={i} className="flex items-start gap-2 text-xs font-mono text-on-surface-variant/80">
-                    <span className="text-primary mt-1">↳</span>
-                    <span>{detail}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+              VIEW_LIVE <ExternalLink size={12} className="group-hover/btn:translate-x-1 transition-transform" />
+            </a>
           )}
-        </AnimatePresence>
-
-        <div 
-          onClick={(e) => e.stopPropagation()}
-          className="project-footer flex items-center justify-between mt-auto pt-6 border-t border-outline-variant/30"
-        >
-          <div className="flex gap-2 flex-wrap">
-            {project.tags.map(tag => (
-              <span key={tag} className="bg-surface-container-highest px-3 py-1 text-[10px] font-mono text-primary">[{tag}]</span>
-            ))}
-          </div>
-          <div className="flex gap-4">
-            {project.liveUrl && (
-              <a 
-                href={project.liveUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="relative z-30 bg-primary text-on-primary font-black px-6 py-2 text-xs tracking-[0.2em] hover:bg-white hover:text-surface transition-all active:translate-y-1 flex items-center gap-2 group/btn shadow-[0_0_10px_rgba(255,180,168,0.2)]"
-              >
-                VIEW_LIVE <ExternalLink size={12} className="group-hover/btn:translate-x-1 transition-transform" />
-              </a>
-            )}
-            {project.sourceUrl && (
-              <a 
-                href={project.sourceUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="relative z-30 bg-surface-container-highest text-primary font-black px-6 py-2 text-xs tracking-[0.2em] hover:bg-primary hover:text-on-primary transition-all active:translate-y-1 flex items-center gap-2 border border-primary/20 group/btn"
-              >
-                VIEW_SOURCE <Code2 size={12} className="group-hover/btn:scale-110 transition-transform" />
-              </a>
-            )}
-            {!project.sourceUrl && (
-              <button 
-                onClick={(e) => e.stopPropagation()}
-                className="relative z-30 opacity-50 cursor-not-allowed bg-surface-container-highest text-primary font-black px-6 py-2 text-xs tracking-[0.2em] flex items-center gap-2 border border-primary/20"
-              >
-                VIEW_SOURCE <Code2 size={12} />
-              </button>
-            )}
-          </div>
+          {project.sourceUrl && (
+            <a 
+              href={project.sourceUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="relative z-30 bg-surface-container-highest text-primary font-black px-6 py-2 text-xs tracking-[0.2em] hover:bg-primary hover:text-on-primary transition-all active:translate-y-1 flex items-center gap-2 border border-primary/20 group/btn"
+            >
+              VIEW_SOURCE <Code2 size={12} className="group-hover/btn:scale-110 transition-transform" />
+            </a>
+          )}
+          {!project.sourceUrl && (
+            <button 
+              className="relative z-30 opacity-50 cursor-not-allowed bg-surface-container-highest text-primary font-black px-6 py-2 text-xs tracking-[0.2em] flex items-center gap-2 border border-primary/20"
+            >
+              VIEW_SOURCE <Code2 size={12} />
+            </button>
+          )}
         </div>
       </div>
     </motion.div>
