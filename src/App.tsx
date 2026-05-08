@@ -182,7 +182,7 @@ const TopNav = ({ activeSection }: { activeSection: Screen }) => {
   return (
     <header className="fixed top-0 w-full h-16 border-b-4 border-primary bg-surface flex justify-between items-center px-6 z-50 shadow-[0_0_15px_rgba(255,180,168,0.15)]">
       <div className="text-xl font-bold text-primary text-glow uppercase tracking-widest font-sans">
-        SYS_PORTFOLIO_V1.0
+        SAHIL'S PORTFOLIO
       </div>
       <nav className="hidden md:flex gap-8 items-center">
         {(['DASHBOARD', 'TECH_STACK', 'HISTORY', 'PROJECTS', 'CONTACT'] as Screen[]).map((screen) => (
