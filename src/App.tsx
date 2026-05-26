@@ -847,7 +847,7 @@ const Contact = () => {
     setError(null);
 
     try {
-      const response = await fetch('https://formspree.io/f/sahilsrivastwa3@gmail.com', {
+      const response = await fetch('https://formspree.io/f/mzdwjlyw', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -869,7 +869,7 @@ const Contact = () => {
         const data = await response.json();
         // Check for setup error specifically
         if (data.error && data.error.includes("isn't set up yet")) {
-          throw new Error("PENDING_ACTIVATION: Check sahilsrivastwa3@gmail.com (including Spam/Junk) for an activation email from Formspree. You MUST click 'Confirm' to enable the form.");
+          throw new Error("PENDING_ACTIVATION: Form 'mzdwjlyw' is not activated yet. Confirm the activation mail from Formspree to enable it.");
         }
         throw new Error(data.error || 'UPLINK_FAILURE: SIGNAL_NOT_RECEIVED');
       }
