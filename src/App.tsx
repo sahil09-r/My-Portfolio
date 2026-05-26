@@ -790,7 +790,8 @@ const ProjectCard = ({ project }: { project: Project }) => {
       </div>
 
       <div 
-        className="project-footer flex items-center justify-between p-8 pt-0 mt-auto"
+        onClick={(e) => e.stopPropagation()}
+        className="project-footer relative z-40 flex items-center justify-between p-8 pt-0 mt-auto"
       >
         <div className="flex gap-2 flex-wrap">
           {project.tags.map(tag => (
@@ -803,6 +804,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
               href={project.liveUrl} 
               target="_blank" 
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="relative z-30 bg-primary text-on-primary font-black px-6 py-2 text-xs tracking-[0.2em] hover:bg-white hover:text-surface transition-all active:translate-y-1 flex items-center gap-2 group/btn shadow-[0_0_10px_rgba(255,180,168,0.2)]"
             >
               VIEW_LIVE <ExternalLink size={12} className="group-hover/btn:translate-x-1 transition-transform" />
@@ -813,6 +815,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
               href={project.sourceUrl} 
               target="_blank" 
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="relative z-30 bg-surface-container-highest text-primary font-black px-6 py-2 text-xs tracking-[0.2em] hover:bg-primary hover:text-on-primary transition-all active:translate-y-1 flex items-center gap-2 border border-primary/20 group/btn"
             >
               VIEW_SOURCE <Code2 size={12} className="group-hover/btn:scale-110 transition-transform" />
@@ -820,6 +823,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
           )}
           {!project.sourceUrl && (
             <button 
+              onClick={(e) => e.stopPropagation()}
               className="relative z-30 opacity-50 cursor-not-allowed bg-surface-container-highest text-primary font-black px-6 py-2 text-xs tracking-[0.2em] flex items-center gap-2 border border-primary/20"
             >
               VIEW_SOURCE <Code2 size={12} />
